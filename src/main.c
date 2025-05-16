@@ -1,19 +1,18 @@
 #include "../include/socket/socket.h"
 #include "../include/parser/parser.h"
+#include "../libs/linenoise/linenoise.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 int main() {
-  char input_buffer[1024];
   SocketEntity* socket = connect_server();
+  char* line;
 
-  while (1) {
-    printf("\nC: ");
-    if (fgets(input_buffer, sizeof(input_buffer), stdin) != NULL) {
-      input_buffer[strcspn(input_buffer, "\n")] = '\0';
-      send_command(input_buffer, socket);
-    }
-  }
-
+  while((line = linenoise("C: ")) != NULL) {
+    send_command(line, socket);
+    linenoiseHistoryAdd(line);
+    free(line);
+}
   return 0;
 }

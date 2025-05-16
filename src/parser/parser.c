@@ -25,8 +25,8 @@ char** string_to_array(char* string_params, int* length) {
       count++;
     }
   }
-  
-  char** tokens = malloc(sizeof(char) * count);
+
+  char** tokens = malloc(sizeof(char*) * count);
 
   char* token = strtok(string_params, " ");
   while (token != NULL) {
@@ -34,6 +34,7 @@ char** string_to_array(char* string_params, int* length) {
     token = strtok(NULL, " ");
   }
   *length = i;
+
   return tokens;
 }
 
@@ -49,6 +50,5 @@ char* parse_request(char** arguments, int array_length){
     current_argument = __parse_single_string(arguments[i]);
     strcat(request, current_argument);
   }
-
   return request;
 }

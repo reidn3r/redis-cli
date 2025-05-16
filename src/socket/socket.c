@@ -12,7 +12,7 @@
 
 SocketEntity* connect_server() {
   printf("C: Starting Connection.\n");
-  SocketEntity* entity = malloc(sizeof(SocketEntity));
+  SocketEntity* entity = malloc(sizeof(SocketEntity*));
   
   int socket_fd = tcp_handshake();
   entity->socket_fd = socket_fd;
@@ -75,7 +75,7 @@ int send_command(char* args, SocketEntity* entity) {
   int array_length;
   double time_taken;
 
-  char** params_array = string_to_array(args, &array_length);
+  char** params_array = string_to_array(args, &array_length);  
   char* request = parse_request(params_array, array_length);
 
   gettimeofday(&start, NULL);
@@ -97,7 +97,7 @@ int send_command(char* args, SocketEntity* entity) {
 
   buffer[response_bytes] = '\0';
   printf("\nS: %s", buffer);
-  printf("\%.3f ms\n", time_taken);
+  printf("\%.3f ms\n\n", time_taken);
 
   free(request);
   free(params_array);    

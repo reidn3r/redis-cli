@@ -1,5 +1,4 @@
 #include "../include/socket/socket.h"
-#include "../include/parser/parser.h"
 #include "../libs/linenoise/linenoise.h"
 #include <stdio.h>
 #include <stdlib.h>

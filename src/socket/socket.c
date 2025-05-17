@@ -14,14 +14,13 @@ SocketEntity* connect_server() {
   printf("C: Starting Connection.\n");
   SocketEntity* entity = malloc(sizeof(SocketEntity*));
   
-  int socket_fd = tcp_handshake();
-  entity->socket_fd = socket_fd;
-
+  tcp_handshake(entity);
   redis_handshake(entity);
+  
   return entity;
 }
 
-int tcp_handshake(){
+int tcp_handshake(SocketEntity* entity){
   int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
   if(socket_fd == -1) {
     printf("C: Create socket failed.\n");
@@ -41,6 +40,8 @@ int tcp_handshake(){
   }
 
   printf("C: TCP Handshake - OK.\n");
+  
+  entity->socket_fd = socket_fd;
   return socket_fd;
 }
 
@@ -96,10 +97,13 @@ int send_command(char* args, SocketEntity* entity) {
   time_taken += (stop.tv_usec - start.tv_usec) / 1000.0; 
 
   buffer[response_bytes] = '\0';
-  printf("\nS: %s", buffer);
+  char* output = parse_response(buffer);
+
+  printf("\nS: %s\n", output);
   printf("\%.3f ms\n\n", time_taken);
 
   free(request);
+  free(output);
   free(params_array);    
   return 0;
 }

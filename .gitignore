@@ -5,4 +5,4 @@ history.txt
 build
 *.o
 
-out
+.vscode

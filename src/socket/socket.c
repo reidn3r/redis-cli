@@ -10,14 +10,34 @@
 #include "../../include/socket/socket.h"
 #include "../../include/parser/parser.h"
 
-SocketEntity* connect_server() {
-  printf("C: Starting Connection.\n");
-  SocketEntity* entity = malloc(sizeof(SocketEntity*));
-  
+SocketEntity* connect_server(char* ip, int port) {
+  printf("C: Starting Connection to %s:%d.\n", ip, port);
+  SocketEntity* entity = malloc(sizeof(SocketEntity));
+  if (!entity) return NULL;
+
+  strncpy(entity->ip, ip, INET_ADDRSTRLEN);
+  entity->port = port;
+
   tcp_handshake(entity);
   redis_handshake(entity);
   
   return entity;
+}
+
+void parse_arguments(int argc, char* argv[], char* ip, int* port) {
+  strncpy(ip, "127.0.0.1", INET_ADDRSTRLEN);
+  *port = REDIS_DEFAULT_PORT;
+
+  for (int i = 1; i < argc; i++) {
+    if (strcmp(argv[i], "-h") == 0 && i + 1 < argc) {
+      strncpy(ip, argv[i + 1], INET_ADDRSTRLEN - 1);
+      ip[INET_ADDRSTRLEN - 1] = '\0';
+      i++;
+    } else if (strcmp(argv[i], "-p") == 0 && i + 1 < argc) {
+      *port = atoi(argv[i + 1]);
+      i++;
+    }
+  }
 }
 
 int tcp_handshake(SocketEntity* entity){
@@ -28,8 +48,8 @@ int tcp_handshake(SocketEntity* entity){
   }
   
   struct sockaddr_in redis_address;
-  redis_address.sin_port = htons(REDIS_DEFAULT_PORT);
-  redis_address.sin_addr.s_addr = inet_addr("127.0.0.1");
+  redis_address.sin_port = htons(entity->port);
+  redis_address.sin_addr.s_addr = inet_addr(entity->ip);
   redis_address.sin_family = AF_INET;
   memset(&(redis_address.sin_zero), 0, sizeof(redis_address.sin_zero));
   

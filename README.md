@@ -1,5 +1,4 @@
 <h2 align="center"> Redis CLI Implementation in C </h2>
-<h4 align="center">> Work in Progress <</h4>
 <p align="center"> Command Line Interface for Redis Database with Native TCP Connection (05/2025)</p>
 <hr>
 
@@ -35,11 +34,6 @@ The Redis CLI implementation follows a layered network architecture where commun
 
 ``
     3.4: The protocol supports multiple data types including simple strings, errors, integers, bulk strings, and arrays. Each type has distinct formatting rules that ensure proper interpretation by both client and server.
-``
-
-### 4.0 Next Steps:
-``
-    4.1: Implement Client to Server Command Serialization.
 ``
 
 ## Core Features:

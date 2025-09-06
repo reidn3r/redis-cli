@@ -1,52 +1,83 @@
-<h2 align="center"> Redis CLI Implementation in C </h2>
-<p align="center"> Command Line Interface for Redis Database with Native TCP Connection (05/2025)</p>
-<hr>
+# 🔴 Implementação de CLI Redis em C
 
-### Architecture:
-The Redis CLI implementation follows a layered network architecture where communication occurs through multiple protocol layers. The application establishes a reliable connection with the Redis server using TCP sockets and implements the RESP3 protocol for data exchange.
+<p align="center">
+<strong>Interface de Linha de Comando para Banco de Dados Redis com Conexão TCP Nativa</strong>
+<br>
+<em>Maio de 2025</em>
+</p>
 
-## Network Communication Details:
+## 🏗️ Visão Geral da Arquitetura
 
-### 1.0: Protocol Handshakes and Layer Communication
-``
-    1.1: TCP Three-Way Handshake occurs at the Transport Layer (Layer 4) of the OSI model. This handshake establishes a reliable, connection-oriented communication channel between the client and Redis server, ensuring data integrity and proper sequencing of packets.
-    1.2: Redis Application Handshake operates at the Application Layer (Layer 7). After the TCP connection is established, the client negotiates protocol version, performs authentication if required, and selects the target database. This handshake ensures proper application-level communication and security.
-``
+O CLI Redis implementa uma arquitetura de rede em camadas usando sockets TCP nativos e protocolo RESP3 para comunicação eficiente com Redis.
 
-### 2.0: Socket Implementation and Database Connection
-``
-    2.1: The application utilizes POSIX sockets as the fundamental communication mechanism. A socket serves as an endpoint for network communication, providing a programming interface to access TCP/IP networking capabilities.
-``
+```mermaid
+graph TB
+    A[Aplicação CLI] --> B[Serialização RESP3]
+    B --> C[Camada de Socket TCP]
+    C --> D[Transporte de Rede]
+    D --> E[Servidor Redis]
+```
 
+## 📡 Comunicação de Rede
 
-### 3.0: RESP3 Data Serialization and Deserialization
-``
-    3.1: Redis Serialization Protocol version 3 (RESP3) defines how data is formatted for transmission between client and server. All Redis commands and responses are converted to standardized string formats that can be transmitted over the network.
-``
+### 🔌 Pilha de Protocolos
+| Camada | Protocolo | Finalidade |
+| :--- | :--- | :--- |
+| **Transporte (L4)** | TCP | Conexão confiável com handshake de 3 vias |
+| **Aplicação (L7)** | RESP3 | Serialização de dados e processamento de comandos |
 
-``
-    3.2: Serialization Process (Future Steps): Client commands are transformed into RESP3 format before transmission. The serializer converts command structures into properly formatted strings with specific prefixes, length indicators, and terminators that Redis can interpret.
-``
+### 🤝 Processo de Handshake
+1. **Handshake TCP** (Camada 4): Estabelece canal confiável orientado a conexão
+2. **Handshake Redis** (Camada 7): Negociação de protocolo, autenticação e seleção de banco de dados
 
-``
-    3.3: Deserialization Process: Server responses in RESP3 format are parsed and converted back into usable data structures. The deserializer identifies data types based on prefix characters and reconstructs the original data for presentation to the user.
-``
+## ⚙️ Implementação Técnica
 
-``
-    3.4: The protocol supports multiple data types including simple strings, errors, integers, bulk strings, and arrays. Each type has distinct formatting rules that ensure proper interpretation by both client and server.
-``
+### 🔧 Gerenciamento de Sockets
+- **Sockets POSIX** para endpoints de comunicação de rede
+- Capacidades de rede TCP/IP nativas
+- Pool de conexões e gerenciamento
 
-## Core Features:
-``
-The CLI aim to provide a complete interface for Redis database operations with native C implementation. The application supports interactive command execution, connection management, and comprehensive error handling. All Redis commands are supported through the standardized protocol implementation.
-``
+### 📦 Manipulação do Protocolo RESP3
+| Função | Descrição |
+| :--- | :--- |
+| **Serialização** | Comandos → strings formatadas em RESP3 |
+| **Desserialização** | Respostas RESP3 → estruturas de dados utilizáveis |
+| **Suporte a Tipos** | Strings, erros, inteiros, bulk strings, arrays |
 
+## ✨ Funcionalidades Principais
 
-## Usage:
+- ✅ **Execução interativa de comandos**
+- ✅ **Gerenciamento de conexão TCP nativa**  
+- ✅ **Implementação completa do protocolo RESP3**
+- ✅ **Tratamento abrangente de erros**
+- ✅ **Suporte a todos os comandos Redis**
+- ✅ **Serialização/desserialização eficiente de dados**
+
+## 🚀 Como Usar
+
 ```bash
-# Compilation
+# Compilar o projeto
 $ make clean && make all
 
-# Basic connection
-$ ./out/redis-cli -h <REDIS_HOST> -p <REDIS_PORT>
+# Conectar ao servidor Redis
+$ ./out/redis-cli -h <HOST_REDIS> -p <PORTA_REDIS>
+
+# Exemplo com valores padrão
+$ ./out/redis-cli -h 127.0.0.1 -p 6379
 ```
+
+## 🛠️ Instruções de Build
+
+```bash
+# Clonar e compilar
+git clone <repositório>
+cd redis-cli
+make all
+
+# Limpar artefatos de build
+make clean
+```
+
+---
+
+**⭐ Implementação em C nativa** proporcionando interações de baixa latência com banco de dados Redis com suporte completo ao protocolo e comunicação de rede eficiente.
